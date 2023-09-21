@@ -10,13 +10,14 @@ import java.sql.SQLException
 import kotlin.jvm.Throws
 
 class NoteHelper(context: Context) {
+
     private var databaseHelper: DatabaseHelper = DatabaseHelper(context)
     private lateinit var database: SQLiteDatabase
 
     companion object {
         private const val DATABASE_TABLE = TABLE_NAME
-
         private var INSTANCE: NoteHelper? = null
+
         fun getInstance(context: Context): NoteHelper =
             INSTANCE ?: synchronized(this) {
                 INSTANCE ?: NoteHelper(context)
