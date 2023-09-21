@@ -63,4 +63,8 @@ class NoteHelper(context: Context) {
     fun insert(values: ContentValues?): Long {
         return database.insert(DATABASE_TABLE, null, values)
     }
+
+    fun update(id: String, values: ContentValues?): Int {
+        return database.update(DATABASE_TABLE, values, "$_ID = ?", arrayOf(id))
+    }
 }
