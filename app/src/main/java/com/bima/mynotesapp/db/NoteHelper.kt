@@ -3,15 +3,14 @@ package com.bima.mynotesapp.db
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
+import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
+import android.provider.BaseColumns._ID
 import com.bima.mynotesapp.db.DatabaseContract.NoteColumns.Companion.TABLE_NAME
-import com.bima.mynotesapp.db.DatabaseContract.NoteColumns.Companion._ID
-import java.sql.SQLException
-import kotlin.jvm.Throws
 
 class NoteHelper(context: Context) {
 
-    private var databaseHelper: DatabaseHelper = DatabaseHelper(context)
+    private var dataBaseHelper: DatabaseHelper = DatabaseHelper(context)
     private lateinit var database: SQLiteDatabase
 
     companion object {
@@ -26,11 +25,11 @@ class NoteHelper(context: Context) {
 
     @Throws(SQLException::class)
     fun open() {
-        database = databaseHelper.writableDatabase
+        database = dataBaseHelper.writableDatabase
     }
 
     fun close() {
-        databaseHelper.close()
+        dataBaseHelper.close()
 
         if (database.isOpen)
             database.close()
@@ -72,4 +71,5 @@ class NoteHelper(context: Context) {
     fun deleteById(id: String): Int {
         return database.delete(DATABASE_TABLE, "$_ID = '$id'", null)
     }
+
 }

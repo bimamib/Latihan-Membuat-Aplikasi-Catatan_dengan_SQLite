@@ -2,26 +2,21 @@ package com.bima.mynotesapp
 
 import android.content.ContentValues
 import android.content.Intent
-import android.icu.text.SimpleDateFormat
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import com.bima.mynotesapp.databinding.ActivityNoteAddUpdateBinding
 import com.bima.mynotesapp.db.DatabaseContract
-import com.bima.mynotesapp.db.DatabaseContract.NoteColumns.Companion.DATE
 import com.bima.mynotesapp.db.NoteHelper
 import com.bima.mynotesapp.entity.Note
-import java.util.Date
-import java.util.Locale
+import java.text.SimpleDateFormat
+import java.util.*
 
 class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
-
     private var isEdit = false
     private var note: Note? = null
     private var position: Int = 0
@@ -80,7 +75,6 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         binding.btnSubmit.setOnClickListener(this)
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
     override fun onClick(view: View) {
         if (view.id == R.id.btn_submit) {
             val title = binding.edtTitle.text.toString().trim()
@@ -103,16 +97,20 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
             values.put(DatabaseContract.NoteColumns.DESCRIPTION, description)
 
             if (isEdit) {
-                val result = noteHelper.update(note?.id.toString(), values).toLong()
+                val result = noteHelper.update(note?.id.toString(), values)
                 if (result > 0) {
                     setResult(RESULT_UPDATE, intent)
                     finish()
                 } else {
-                    Toast.makeText(this@NoteAddUpdateActivity, "Gagal mengupdate data", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@NoteAddUpdateActivity,
+                        "Gagal mengupdate data",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             } else {
                 note?.date = getCurrentDate()
-                values.put(DATE, getCurrentDate())
+                values.put(DatabaseContract.NoteColumns.DATE, getCurrentDate())
                 val result = noteHelper.insert(values)
 
                 if (result > 0) {
@@ -120,13 +118,16 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
                     setResult(RESULT_ADD, intent)
                     finish()
                 } else {
-                    Toast.makeText(this@NoteAddUpdateActivity, "Gagal menambah data", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@NoteAddUpdateActivity,
+                        "Gagal menambah data",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
     private fun getCurrentDate(): String {
         val dateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault())
         val date = Date()
@@ -149,7 +150,6 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         return super.onOptionsItemSelected(item)
     }
 
-    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         showAlertDialog(ALERT_DIALOG_CLOSE)
     }
@@ -183,7 +183,11 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
                         setResult(RESULT_DELETE, intent)
                         finish()
                     } else {
-                        Toast.makeText(this@NoteAddUpdateActivity, "Gagal menghapus data", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@NoteAddUpdateActivity,
+                            "Gagal menghapus data",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }

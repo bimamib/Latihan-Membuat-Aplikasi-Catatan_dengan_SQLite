@@ -3,11 +3,13 @@ package com.bima.mynotesapp.helper
 import android.database.Cursor
 import com.bima.mynotesapp.db.DatabaseContract
 import com.bima.mynotesapp.entity.Note
+import java.util.*
 
 object MappingHelper {
 
     fun mapCursorToArrayList(notesCursor: Cursor?): ArrayList<Note> {
         val notesList = ArrayList<Note>()
+
         notesCursor?.apply {
             while (moveToNext()) {
                 val id = getInt(getColumnIndexOrThrow(DatabaseContract.NoteColumns._ID))
