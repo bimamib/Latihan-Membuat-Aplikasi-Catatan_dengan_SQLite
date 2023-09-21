@@ -1,5 +1,6 @@
 package com.bima.mynotesapp.db
 
+import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
@@ -57,5 +58,9 @@ class NoteHelper(context: Context) {
             null,
             null
         )
+    }
+
+    fun insert(values: ContentValues?): Long {
+        return database.insert(DATABASE_TABLE, null, values)
     }
 }
