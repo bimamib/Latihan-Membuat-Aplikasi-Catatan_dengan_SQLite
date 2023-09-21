@@ -3,6 +3,8 @@ package com.bima.mynotesapp.db
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import com.bima.mynotesapp.db.DatabaseContract.NoteColumns.Companion.TABLE_NAME
+import java.sql.SQLException
+import kotlin.jvm.Throws
 
 class NoteHelper(context: Context) {
     private var databaseHelper: DatabaseHelper = DatabaseHelper(context)
@@ -16,5 +18,17 @@ class NoteHelper(context: Context) {
             INSTANCE ?: synchronized(this) {
                 INSTANCE ?: NoteHelper(context)
             }
+    }
+
+    @Throws(SQLException::class)
+    fun open() {
+        database = databaseHelper.writableDatabase
+    }
+
+    fun close() {
+        databaseHelper.close()
+
+        if (database.isOpen)
+            database.close()
     }
 }
