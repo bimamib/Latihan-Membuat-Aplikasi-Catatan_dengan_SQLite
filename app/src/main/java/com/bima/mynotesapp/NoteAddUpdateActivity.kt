@@ -130,6 +130,7 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
     private fun getCurrentDate(): String {
         val dateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault())
         val date = Date()
+
         return dateFormat.format(date)
     }
 
@@ -167,7 +168,6 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         val alertDialogBuilder = AlertDialog.Builder(this)
-
         alertDialogBuilder.setTitle(dialogTitle)
         alertDialogBuilder
             .setMessage(dialogMessage)
