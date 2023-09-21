@@ -6,6 +6,8 @@ import android.icu.text.SimpleDateFormat
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -128,5 +130,24 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         val dateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault())
         val date = Date()
         return dateFormat.format(date)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        if (isEdit) {
+            menuInflater.inflate(R.menu.menu_form, menu)
+        }
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_delete -> showAlertDialog(ALERT_DIALOG_DELETE)
+            android.R.id.home -> showAlertDialog(ALERT_DIALOG_CLOSE)
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onBackPressed() {
+        showAlertDialog(ALERT_DIALOG_CLOSE)
     }
 }
