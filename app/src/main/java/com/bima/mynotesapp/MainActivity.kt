@@ -3,13 +3,20 @@ package com.bima.mynotesapp
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bima.mynotesapp.adapter.NoteAdapter
 import com.bima.mynotesapp.databinding.ActivityMainBinding
+import com.bima.mynotesapp.db.NoteHelper
 import com.bima.mynotesapp.entity.Note
+import com.bima.mynotesapp.helper.MappingHelper
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -66,9 +73,33 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this@MainActivity, NoteAddUpdateActivity::class.java)
             resultLauncher.launch(intent)
         }
+
+        // proses ambil data
+        loadNotesAsync()
     }
 
     private fun showSnackbarMessage(message: String) {
         Snackbar.make(binding.rvNotes, message, Snackbar.LENGTH_SHORT).show()
+    }
+
+    private fun loadNotesAsync() {
+        lifecycleScope.launch {
+            binding.progressbar.visibility = View.VISIBLE
+            val noteHelper = NoteHelper.getInstance(applicationContext)
+            noteHelper.open()
+            val deferredNotes = async(Dispatchers.IO) {
+                val cursor = noteHelper.queryAll()
+                MappingHelper.mapCursorToArrayList(cursor)
+            }
+            binding.progressbar.visibility = View.INVISIBLE
+            val notes = deferredNotes.await()
+            if (notes.size > 0) {
+                adapter.listNotes = notes
+            } else {
+                adapter.listNotes = ArrayList()
+                showSnackbarMessage("Tidak ada data saat ini")
+            }
+            noteHelper.close()
+        }
     }
 }
