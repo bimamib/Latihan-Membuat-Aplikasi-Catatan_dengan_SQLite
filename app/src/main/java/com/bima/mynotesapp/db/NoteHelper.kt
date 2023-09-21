@@ -1,8 +1,10 @@
 package com.bima.mynotesapp.db
 
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.bima.mynotesapp.db.DatabaseContract.NoteColumns.Companion.TABLE_NAME
+import com.bima.mynotesapp.db.DatabaseContract.NoteColumns.Companion._ID
 import java.sql.SQLException
 import kotlin.jvm.Throws
 
@@ -30,5 +32,16 @@ class NoteHelper(context: Context) {
 
         if (database.isOpen)
             database.close()
+    }
+
+    fun queryAll(): Cursor {
+        return database.query(
+            DATABASE_TABLE,
+            null,
+            null,
+            null,
+            null,
+            null,
+            "$_ID ASC")
     }
 }
